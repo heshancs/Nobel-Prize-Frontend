@@ -1,4 +1,4 @@
-import { Pets } from "@mui/icons-material";
+import { Pets, ModeNight } from "@mui/icons-material";
 import {
   AppBar,
   Avatar,
@@ -9,8 +9,11 @@ import {
   styled,
   Toolbar,
   Typography,
+  Switch,
 } from "@mui/material";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useThemeContext } from "../ThemeContext";
 
 const StyledToolbar = styled(Toolbar)(() => ({
   display: "flex",
@@ -42,18 +45,44 @@ const UserBox = styled(Box)(({ theme }) => ({
   },
 })) as typeof Box;
 
+const ModeBox = styled("div")(() => ({
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+}))
+
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { mode, toggleMode } = useThemeContext();
+
   return (
     <AppBar position="sticky">
       <StyledToolbar>
-        <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }}>
-          Nobel Prize App
-        </Typography>
+        <Link to={`/`} style={{ textDecoration: "none", color: "inherit" }}>
+          <Typography
+            variant="h6"
+            sx={{ display: { xs: "none", sm: "block" } }}
+          >
+            Nobel Prize App
+          </Typography>
+        </Link>
         <Pets sx={{ display: { xs: "block", sm: "none" } }} />
         <Search>
           <InputBase placeholder="search..." />
         </Search>
+
+        <UserBox onClick={() => setOpen(true)}>
+          <Avatar
+            sx={{ width: 30, height: 30 }}
+            src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          />
+        </UserBox>
+        <ModeBox >
+        <ModeNight />
+        <Icons>
+          <Switch checked={mode === "dark"} onChange={toggleMode} />
+        </Icons>
+      </ModeBox>
         <Icons>
           <Avatar
             sx={{ width: 30, height: 30 }}
@@ -61,12 +90,6 @@ const Navbar: React.FC = () => {
             onClick={() => setOpen(true)}
           />
         </Icons>
-        <UserBox onClick={() => setOpen(true)}>
-          <Avatar
-            sx={{ width: 30, height: 30 }}
-            src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          />
-        </UserBox>
       </StyledToolbar>
       <Menu
         id="demo-positioned-menu"
