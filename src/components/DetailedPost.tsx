@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { Favorite, FavoriteBorder, MoreVert, Share } from "@mui/icons-material";
 import {
   Avatar,
@@ -9,39 +10,58 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-const DetailedPost = () => {
+import { useParams } from "react-router-dom";
+
+const DetailedPost = (postId) => {
+  const [postData, setPostData] = useState(null);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetch(`https://api.nobelprize.org/2.1/laureate/${id}`)
+      .then((response) => response.json())
+      .then((data) => setPostData(data[0]));
+  }, []);
+
   return (
     <Card sx={{ margin: 5 }}>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVert />
-          </IconButton>
-        }
-        title="Heshan Jayasinghe"
-        subheader="May 10, 2024"
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          sample description
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <Checkbox
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite sx={{ color: "red" }} />}
+      {postData && (
+        <>
+          <CardHeader
+            avatar={
+              <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
+                {postData.id}
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVert />
+              </IconButton>
+            }
+            title={postData.knownName.en} // Assuming author is available in the fetched data
+            subheader={postData.birth.date} // Assuming date is available in the fetched data
           />
-        </IconButton>
-        <IconButton aria-label="share">
-          <Share />
-        </IconButton>
-      </CardActions>
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              {postData.fileName} {/* Assuming title is available in the fetched data */}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              "postDatadescription" {/* Assuming description is available in the fetched data */}
+            </Typography>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <Checkbox
+                icon={<FavoriteBorder />}
+                checkedIcon={<Favorite sx={{ color: "red" }} />}
+              />
+            </IconButton>
+            <IconButton aria-label="share">
+              <Share />
+            </IconButton>
+          </CardActions>
+        </>
+      )}
     </Card>
   );
 };
