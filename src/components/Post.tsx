@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { Favorite, FavoriteBorder, MoreVert, Share } from "@mui/icons-material";
 import {
@@ -11,14 +12,21 @@ import {
   Typography,
 } from "@mui/material";
 
-const Post = ({ postId }: { postId: string }) => {
+const Post = ({ postId, title, author, gender, date, country }) => {
+  // Format the date
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
   return (
     <Link to={`/post/${postId}`} style={{ textDecoration: "none", color: "inherit" }}>
       <Card sx={{ margin: 5 }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-              R
+            <Avatar sx={{ bgcolor: "red" }} aria-label="author-avatar">
+              {author[0].toUpperCase()}
             </Avatar>
           }
           action={
@@ -26,12 +34,15 @@ const Post = ({ postId }: { postId: string }) => {
               <MoreVert />
             </IconButton>
           }
-          title="Heshan Jayasinghe"
-          subheader="May 10, 2024"
+          title={author} // Assuming author is passed as prop
+          subheader={`${formattedDate} - ${country}`} // Display date and country
         />
         <CardContent>
+          <Typography variant="h5" component="div">
+            {title}
+          </Typography>
           <Typography variant="body2" color="text.secondary">
-            sample description
+            "description"
           </Typography>
         </CardContent>
         <CardActions disableSpacing>

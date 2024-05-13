@@ -18,7 +18,7 @@ const KeycloackContext = createContext()
 
         keycloak.init({
             onLoad: 'login-required', 
-            checkLoginIframe: false,
+            // checkLoginIframe: false,
         }).then(authenticated => {
             setKeycloackValue(keycloak)
             setAuthenticated(authenticated)
