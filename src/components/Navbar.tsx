@@ -11,9 +11,10 @@ import {
   Typography,
   Switch,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "../ThemeContext";
+import { KeycloackContext } from "../KeycloackContext";
 
 const StyledToolbar = styled(Toolbar)(() => ({
   display: "flex",
@@ -54,7 +55,18 @@ const ModeBox = styled("div")(() => ({
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { mode, toggleMode } = useThemeContext();
+  const { keycloackValue, authenticated, logout } = useContext(KeycloackContext)
 
+  const handleAuthClick = () => {
+    // Perform login or logout action based on isUserAuthenticated state
+    if (authenticated) {
+      // Handle logout logic
+      logout();
+    } else {
+      // Handle login logic
+      console.log("Logging in...");
+    }
+  };
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -107,7 +119,7 @@ const Navbar: React.FC = () => {
       >
         <MenuItem>Profile</MenuItem>
         <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={handleAuthClick}>{authenticated ? "Logout" : "Login"}</MenuItem>
       </Menu>
     </AppBar>
   );
