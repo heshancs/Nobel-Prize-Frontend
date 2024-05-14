@@ -15,12 +15,6 @@ const Sidebar: React.FC = () => {
               <ListItemText primary="Home" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton component="a" href="#">
-              <ListItemIcon><AccountBox /></ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItemButton>
-          </ListItem>
         </List>
       </Box>
     </Box>

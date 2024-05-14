@@ -88,7 +88,7 @@ useEffect(() => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
+      <Typography variant="body1" gutterBottom style={{ marginBottom: "10px" }}>
           Comments
         </Typography>
         {comments.map((comment) => (
@@ -97,7 +97,7 @@ useEffect(() => {
             style={{ display: "flex", alignItems: "center", marginBottom: 10 }}
           >
             <Avatar sx={{ bgcolor: "red" }} aria-label="comment-avatar">
-              U
+              {comment?.firstname.split('')[0]}
             </Avatar>
             <div style={{ marginLeft: 10 }}>
               <Typography variant="body1" style={{ marginBottom: 5 }}>
