@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Favorite, FavoriteBorder, MoreVert, Share } from "@mui/icons-material";
 import {
@@ -26,7 +25,7 @@ const Post = ({ postId, title, author, gender, date, country }) => {
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: "red" }} aria-label="author-avatar">
-              {author[0].toUpperCase()}
+              {author? author[0].toUpperCase() : ""}
             </Avatar>
           }
           action={
@@ -42,7 +41,7 @@ const Post = ({ postId, title, author, gender, date, country }) => {
             {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            "description"
+            {gender}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
