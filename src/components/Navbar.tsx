@@ -11,7 +11,7 @@ import {
   Typography,
   Switch,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "../ThemeContext";
 import { KeycloackContext } from "../KeycloackContext";
@@ -50,21 +50,29 @@ const ModeBox = styled("div")(() => ({
   display: "flex",
   alignItems: "center",
   gap: "10px",
-}))
+}));
 
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { mode, toggleMode } = useThemeContext();
-  const { keycloackValue, authenticated, logout } = useContext(KeycloackContext)
+  const { keycloackValue, authenticated, logout } =
+    useContext(KeycloackContext);
+  const [userProfile, setUserProfile] = useState("");
+
+  useEffect(() => {
+    if (authenticated) {
+      keycloackValue.loadUserProfile().then((profile) => {
+        setUserProfile(profile);
+        console.log(profile);
+      });
+    }
+  }, [authenticated]);
 
   const handleAuthClick = () => {
     // Perform login or logout action based on isUserAuthenticated state
     if (authenticated) {
       // Handle logout logic
       logout();
-    } else {
-      // Handle login logic
-      console.log("Logging in...");
     }
   };
   return (
@@ -82,19 +90,21 @@ const Navbar: React.FC = () => {
         <Search>
           <InputBase placeholder="search..." />
         </Search>
-
         <UserBox onClick={() => setOpen(true)}>
           <Avatar
             sx={{ width: 30, height: 30 }}
             src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           />
         </UserBox>
-        <ModeBox >
-        <ModeNight />
-        <Icons>
-          <Switch checked={mode === "dark"} onChange={toggleMode} />
-        </Icons>
-      </ModeBox>
+        <ModeBox>
+          <ModeNight />
+          <Icons>
+            <Switch checked={mode === "dark"} onChange={toggleMode} />
+          </Icons>
+        </ModeBox>
+        <Typography variant="p" sx={{ display: { xs: "none", sm: "block" } }}>
+          {userProfile.firstName}
+        </Typography>
         <Icons>
           <Avatar
             sx={{ width: 30, height: 30 }}
@@ -119,7 +129,9 @@ const Navbar: React.FC = () => {
       >
         <MenuItem>Profile</MenuItem>
         <MenuItem>My account</MenuItem>
-        <MenuItem onClick={handleAuthClick}>{authenticated ? "Logout" : "Login"}</MenuItem>
+        <MenuItem onClick={handleAuthClick}>
+          {authenticated ? "Logout" : "Login"}
+        </MenuItem>
       </Menu>
     </AppBar>
   );
