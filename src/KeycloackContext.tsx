@@ -3,14 +3,21 @@ import React, { createContext, useState, useEffect } from 'react'
 // KEYCLOACK
 import Keycloak from 'keycloak-js'
 
-const KeycloackContext = createContext()
+// const defaultContext={
+//     keycloackValue: null,
+//     authenticated: false,
+//     logout: () => void
+// };
+
+const KeycloackContext = createContext('')
+
 
   const KeycloackContextProvider: React.FC = (props) => {
-    const [ keycloackValue, setKeycloackValue ] = useState(null)
+    const [ keycloackValue, setKeycloackValue ] = useState<null | Keycloak>(null)
     const [ authenticated, setAuthenticated ] = useState(false)
 
     const setKeycloack = () => {
-        const keycloak = Keycloak({
+        const keycloak = new Keycloak({
             url: import.meta.env.VITE_KEYCLOAK_URL,
             realm: import.meta.env.VITE_KEYCLOAK_REALM,
             clientId: import.meta.env.VITE_KEYCLOAK_CLIENT,
@@ -18,7 +25,7 @@ const KeycloackContext = createContext()
 
         keycloak.init({
             onLoad: 'login-required', 
-            // checkLoginIframe: false,
+            checkLoginIframe: false,
         }).then(authenticated => {
             setKeycloackValue(keycloak)
             setAuthenticated(authenticated)
@@ -26,7 +33,7 @@ const KeycloackContext = createContext()
     }
 
     const logout = () => {
-        setKeycloack(null)
+        setKeycloackValue(null)
         setAuthenticated(false)
         keycloackValue?.logout()
     }
