@@ -8,6 +8,9 @@ import {
   CardHeader,
   Checkbox,
   IconButton,
+  List,
+  ListItem,
+  ListItemText,
   Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -24,6 +27,15 @@ const DetailedPost = () => {
       .then((data) => setPostData(data[0]));
   }, []);
 
+  console.log(postData);
+  const formattedDate = new Date(postData?.birth?.date).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }
+  );
   return (
     <>
       <Card sx={{ margin: 5 }}>
@@ -31,43 +43,45 @@ const DetailedPost = () => {
           <>
             <CardHeader
               avatar={
-                <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-                  {postData.id}
+                <Avatar sx={{ bgcolor: "red" }} aria-label="author-avatar">
+                  {postData?.fullName?.en.toUpperCase().split("")[0]}
                 </Avatar>
               }
-              action={
-                <IconButton aria-label="settings">
-                  <MoreVert />
-                </IconButton>
-              }
-              title={postData.knownName.en} // Assuming author is available in the fetched data
-              subheader={postData.birth.date} // Assuming date is available in the fetched data
+              title={postData?.knownName?.en} // Assuming author is passed as prop
+              subheader={`${formattedDate} - ${postData?.birth?.place?.country?.en}`} // Display date and country
             />
             <CardContent>
               <Typography variant="body2" color="text.secondary">
-                {postData.fileName}{" "}
-                {/* Assuming title is available in the fetched data */}
+                Category:
+              </Typography>
+              <Typography paragraph>
+                {postData?.nobelPrizes[0]?.category.en}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                "postDatadescription"{" "}
-                {/* Assuming description is available in the fetched data */}
+                Prizes:
               </Typography>
+              <List>
+                {postData?.nobelPrizes && postData.nobelPrizes.length > 0 ? (
+                  postData.nobelPrizes.map((prize, index) => (
+                    <ListItem key={index}>
+                      <ListItemText
+                        primary={prize.awardYear}
+                        secondary={`${prize.categoryFullName.en} - ${prize.motivation.en}`}
+                      />
+                    </ListItem>
+                  ))
+                ) : (
+                  <ListItem>
+                    <ListItemText primary="No prizes available." />
+                  </ListItem>
+                )}
+              </List>
             </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <Checkbox
-                  icon={<FavoriteBorder />}
-                  checkedIcon={<Favorite sx={{ color: "red" }} />}
-                />
-              </IconButton>
-              <IconButton aria-label="share">
-                <Share />
-              </IconButton>
-            </CardActions>
           </>
         )}
-      </Card>
       <CommentSection postId={id} />
+
+      </Card>
     </>
   );
 };

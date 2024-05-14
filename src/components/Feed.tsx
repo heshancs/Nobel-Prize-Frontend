@@ -54,6 +54,7 @@ useEffect(() => {
               gender={post?.gender}
               date={post?.birth?.date}
               country={post?.birth?.place?.country?.en}
+              category={post?.nobelPrizes[0]?.category.en}
               // description={post.description}
               // Add other necessary props from your API response
             />

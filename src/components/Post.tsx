@@ -1,7 +1,9 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { Favorite, FavoriteBorder, MoreVert, Share } from "@mui/icons-material";
 import {
   Avatar,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -11,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const Post = ({ postId, title, author, gender, date, country }) => {
+const Post = ({ postId, title, author, gender, date, country , category}) => {
   // Format the date
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -37,24 +39,18 @@ const Post = ({ postId, title, author, gender, date, country }) => {
           subheader={`${formattedDate} - ${country}`} // Display date and country
         />
         <CardContent>
-          <Typography variant="h5" component="div">
-            {title}
+          <Typography variant="p" component="div">
+            {category}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {gender}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <Checkbox
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite sx={{ color: "red" }} />}
-            />
-          </IconButton>
-          <IconButton aria-label="share">
-            <Share />
-          </IconButton>
-        </CardActions>
+        <CardActions>
+        <Button size="small" color="primary" >
+          See More
+        </Button>
+      </CardActions>
       </Card>
     </Link>
   );

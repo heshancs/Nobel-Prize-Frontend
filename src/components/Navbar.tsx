@@ -69,9 +69,7 @@ const Navbar: React.FC = () => {
   }, [authenticated]);
 
   const handleAuthClick = () => {
-    // Perform login or logout action based on isUserAuthenticated state
     if (authenticated) {
-      // Handle logout logic
       logout();
     }
   };
@@ -86,16 +84,7 @@ const Navbar: React.FC = () => {
             Nobel Prize App
           </Typography>
         </Link>
-        <Pets sx={{ display: { xs: "block", sm: "none" } }} />
-        <Search>
-          <InputBase placeholder="search..." />
-        </Search>
-        <UserBox onClick={() => setOpen(true)}>
-          <Avatar
-            sx={{ width: 30, height: 30 }}
-            src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          />
-        </UserBox>
+        
         <ModeBox>
           <ModeNight />
           <Icons>
@@ -103,36 +92,13 @@ const Navbar: React.FC = () => {
           </Icons>
         </ModeBox>
         <Typography variant="p" sx={{ display: { xs: "none", sm: "block" } }}>
-          {userProfile.firstName}
+          Wellcome {userProfile.firstName}
         </Typography>
-        <Icons>
-          <Avatar
-            sx={{ width: 30, height: 30 }}
-            src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            onClick={() => setOpen(true)}
-          />
-        </Icons>
-      </StyledToolbar>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        open={open}
-        onClose={() => setOpen(false)}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
         <MenuItem onClick={handleAuthClick}>
-          {authenticated ? "Logout" : "Login"}
+          Logout
         </MenuItem>
-      </Menu>
+      </StyledToolbar>
+   
     </AppBar>
   );
 };
