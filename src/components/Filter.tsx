@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import {
   FormControl,
   InputLabel,
@@ -6,17 +6,25 @@ import {
   MenuItem,
   TextField,
   Button,
-  Box
-} from '@mui/material';
+  Box,
+} from "@mui/material";
+interface FilterProps {
+  onFilterChange: (filters: {
+    gender: string;
+    birthYear: string;
+    deathYear: string;
+    nobelPrizeCategory: string;
+  }) => void;
+}
 
-const Filter = ({ onFilterChange }) => {
-  const [gender, setGender] = useState('');
-  const [birthYear, setBirthYear] = useState('');
-  const [deathYear, setDeathYear] = useState('');
-  const [category, setCategory] = useState('');
+const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
+  const [gender, setGender] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [deathYear, setDeathYear] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleFilterChange = () => {
-    onFilterChange({ gender, birthYear, deathYear, category });
+    onFilterChange({ gender, birthYear, deathYear, nobelPrizeCategory: category });
   };
 
   return (
@@ -25,7 +33,7 @@ const Filter = ({ onFilterChange }) => {
         <InputLabel>Gender</InputLabel>
         <Select
           value={gender}
-          onChange={(e) => setGender(e.target.value)}
+          onChange={(e) => setGender(e.target.value as string)}
           label="Gender"
         >
           <MenuItem value="">All</MenuItem>
@@ -55,7 +63,7 @@ const Filter = ({ onFilterChange }) => {
         <InputLabel>Category</InputLabel>
         <Select
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => setCategory(e.target.value as string)}
           label="Category"
         >
           <MenuItem value="">All</MenuItem>

@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import { Favorite, FavoriteBorder, MoreVert, Share } from "@mui/icons-material";
 import {
   Avatar,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
-  Checkbox,
-  IconButton,
   List,
   ListItem,
   ListItemText,
@@ -16,13 +12,46 @@ import {
 import { useParams } from "react-router-dom";
 import CommentSection from "./CommentSection";
 
+interface INobelPrize {
+  category: {
+    en: string;
+  };
+  awardYear: number;
+  categoryFullName: {
+    en: string;
+  };
+  motivation: {
+    en: string;
+  };
+}
+
+interface IPostData {
+  nobelPrizes: INobelPrize[];
+  id: number;
+  fullName: {
+    en: string;
+  };
+  knownName: {
+    en: string;
+  };
+  gender: string;
+  birth: {
+    date: any;
+    place: {
+      country: {
+        en: string;
+      };
+    };
+  };
+}
+
 const DetailedPost = () => {
-  const [postData, setPostData] = useState(null);
+  const [postData, setPostData] = useState<IPostData>();
 
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`https://api.nobelprize.org/2.1/laureate/${id}`)
+    fetch(`${import.meta.env.VITE_NOBEL_PRIZE_BASE_URL}/laureate/${id}`)
       .then((response) => response.json())
       .then((data) => setPostData(data[0]));
   }, []);
@@ -62,7 +91,7 @@ const DetailedPost = () => {
               </Typography>
               <List>
                 {postData?.nobelPrizes && postData.nobelPrizes.length > 0 ? (
-                  postData.nobelPrizes.map((prize, index) => (
+                  postData.nobelPrizes.map((prize: INobelPrize, index) => (
                     <ListItem key={index}>
                       <ListItemText
                         primary={prize.awardYear}
@@ -79,8 +108,7 @@ const DetailedPost = () => {
             </CardContent>
           </>
         )}
-      <CommentSection postId={id} />
-
+        <CommentSection postId={id} />
       </Card>
     </>
   );
