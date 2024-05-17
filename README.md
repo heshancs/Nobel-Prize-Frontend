@@ -1,30 +1,75 @@
-# React + TypeScript + Vite
+# Project Title
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the Nobel Prize Frontend project! This project is a React application built with Vite and TypeScript, designed to showcase Nobel Prize-related content. It uses MUI for styling, and features user authentication and access management with Keycloak, including Google reCAPTCHA for security. The application also supports light and dark themes using a custom ThemeContext.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Authors
 
-## Expanding the ESLint configuration
+- [Heshan Jayasinghe](https://github.com/heshancs)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Technologies Used
 
-- Configure the top-level `parserOptions` property like this:
+**React:** A JavaScript library for building user interfaces.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+**Vite:** A fast build tool and development server for modern web projects.
+
+**TypeScript:** A superset of JavaScript that adds static types.
+
+**MUI:** A popular React UI framework for building responsive, accessible, and customizable components.
+
+**Keycloak:** An open-source identity and access management solution.
+
+**Google reCAPTCHA:** A service to protect your site from spam and abuse.
+
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/nobel-prize-frontend.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install the dependencies:
+
+```bash
+npm install
+```
+
+3. Rename the .env.example file to .env and configure your environment variables:
+
+
+
+```bash
+mv .env.example .env
+```
+
+4. Rename the .env.example file to .env and configure your environment variables:
+
+
+
+```bash
+npm run dev
+```
+    
+    
+## Screenshots
+
+![App Screenshot - Light](https://asset.cloudinary.com/dyldogaxt/74c7a11d2485508037871152db19b380)
+
+![App Screenshot - Dark](https://asset.cloudinary.com/dyldogaxt/eb83b5caedce549da523268c872b3b30)
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`VITE_KEYCLOAK_URL`
+
+`VITE_KEYCLOAK_REALM`
+
+`VITE_KEYCLOAK_CLIENT`
+
+`VITE_NOBEL_PRIZE_BASE_URL`
+
+`VITE_APP_BASE_URL`
+

@@ -1,4 +1,3 @@
-// HomePage.tsx
 import React from "react";
 import Feed from "../components/Feed";
 import SideBar from "../components/Sidebar";

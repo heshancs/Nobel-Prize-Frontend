@@ -1,10 +1,7 @@
-import { Pets, ModeNight } from "@mui/icons-material";
+import { ModeNight } from "@mui/icons-material";
 import {
   AppBar,
-  Avatar,
   Box,
-  InputBase,
-  Menu,
   MenuItem,
   styled,
   Toolbar,
@@ -15,18 +12,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "../ThemeContext";
 import { KeycloackContext } from "../KeycloackContext";
+import { KeycloakProfile } from "keycloak-js";
+
+interface UserProfile {
+  firstName?: string;
+}
 
 const StyledToolbar = styled(Toolbar)(() => ({
   display: "flex",
   justifyContent: "space-between",
 })) as typeof Toolbar;
-
-const Search = styled("div")(({ theme }) => ({
-  backgroundColor: "white",
-  padding: "0 10px",
-  borderRadius: theme.shape.borderRadius,
-  width: "40%",
-}));
 
 const Icons = styled(Box)(({ theme }) => ({
   display: "none",
@@ -37,15 +32,6 @@ const Icons = styled(Box)(({ theme }) => ({
   },
 })) as typeof Box;
 
-const UserBox = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  [theme.breakpoints.up("sm")]: {
-    display: "none",
-  },
-})) as typeof Box;
-
 const ModeBox = styled("div")(() => ({
   display: "flex",
   alignItems: "center",
@@ -53,26 +39,32 @@ const ModeBox = styled("div")(() => ({
 }));
 
 const Navbar: React.FC = () => {
-  const [open, setOpen] = useState(false);
   const { mode, toggleMode } = useThemeContext();
-  const { keycloackValue, authenticated, logout } =
-    useContext(KeycloackContext);
-  const [userProfile, setUserProfile] = useState("");
+  const keycloackContext = useContext(KeycloackContext);
+
+  if (!keycloackContext) {
+    throw new Error(
+      "KeycloackContext must be used within a KeycloackContextProvider"
+    );
+  }
+
+  const { keycloackValue, authenticated, logout } = keycloackContext;
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    if (authenticated) {
-      keycloackValue.loadUserProfile().then((profile) => {
-        setUserProfile(profile);
-        console.log(profile);
+    if (authenticated && keycloackValue) {
+      keycloackValue.loadUserProfile().then((profile: KeycloakProfile) => {
+        setUserProfile(profile as UserProfile);
       });
     }
-  }, [authenticated]);
+  }, [authenticated, keycloackValue]);
 
   const handleAuthClick = () => {
-    if (authenticated) {
+    if (authenticated && keycloackValue) {
       logout();
     }
   };
+
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -84,21 +76,21 @@ const Navbar: React.FC = () => {
             Nobel Prize App
           </Typography>
         </Link>
-        
+
         <ModeBox>
           <ModeNight />
           <Icons>
             <Switch checked={mode === "dark"} onChange={toggleMode} />
           </Icons>
         </ModeBox>
-        <Typography variant="p" sx={{ display: { xs: "none", sm: "block" } }}>
-          Wellcome {userProfile.firstName}
+        <Typography
+          variant="body1"
+          sx={{ display: { xs: "none", sm: "block" } }}
+        >
+          Welcome {userProfile?.firstName}
         </Typography>
-        <MenuItem onClick={handleAuthClick}>
-          Logout
-        </MenuItem>
+        <MenuItem onClick={handleAuthClick}>Logout</MenuItem>
       </StyledToolbar>
-   
     </AppBar>
   );
 };

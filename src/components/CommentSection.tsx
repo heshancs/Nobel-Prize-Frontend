@@ -1,47 +1,75 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Avatar, Card, CardContent, Typography, TextField, Button } from '@mui/material';
-import { KeycloackContext } from '../KeycloackContext';
+import { useState, useEffect, useContext } from "react";
+import {
+  Avatar,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
+import { KeycloackContext } from "../KeycloackContext";
+import { KeycloakProfile } from 'keycloak-js';
+
+interface IComment {
+  id: number;
+  firstname: string | undefined;
+  lastname: string | undefined;
+  created_at: string | Date | number;
+  text: string | undefined;
+  postId: string | undefined;
+  userId: string | undefined;
+}
+
+interface IUserProfile {
+  firstName: string;
+  lastName: string;
+  id: string;
+}
 
 const CommentSection = ({ postId }) => {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<IComment[]>([]);
   const [newComment, setNewComment] = useState("");
 
-  const { keycloackValue, authenticated, logout } =
-  useContext(KeycloackContext);
-const [userProfile, setUserProfile] = useState("");
+  const keycloackContext = useContext(KeycloackContext);
 
-useEffect(() => {
-  if (authenticated) {
-    keycloackValue.loadUserProfile().then((profile) => {
-      setUserProfile(profile);
-      console.log(profile);
-    });
+  if (!keycloackContext) {
+    throw new Error("KeycloackContext must be used within a KeycloackContextProvider");
   }
-}, [authenticated]);
+
+  const { keycloackValue, authenticated } = keycloackContext;
+
+  const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
 
   useEffect(() => {
-    if(authenticated){
-      fetch(`http://localhost:3000/api/comments/post/${postId}`)
-      .then(response => response.json())
-      .then(data => {
-        // Format the created_at date
-        const formattedComments = data.map(comment => ({
-          ...comment,
-          created_at: new Date(comment.created_at).toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-        }));
-        setComments(formattedComments);
-      })
-      .catch(error => console.error('Error fetching comments:', error));
- 
+    if (authenticated && keycloackValue) {
+      keycloackValue.loadUserProfile().then((profile: KeycloakProfile) => {
+        setUserProfile(profile as IUserProfile);
+      });
+    }
+  }, [authenticated, keycloackValue]);
+
+  useEffect(() => {
+    if (authenticated) {
+      fetch(`${import.meta.env.VITE_APP_BASE_URL}/comments/post/${postId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          // Format the created_at date
+          const formattedComments = data?.map((comment: IComment) => ({
+            ...comment,
+            created_at: new Date(comment.created_at).toLocaleString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          }));
+          setComments(formattedComments);
+        })
+        .catch((error) => console.error("Error fetching comments:", error));
     }
     // Fetch comments for the specific userId
-     }, [keycloackValue]);
+  }, [keycloackValue]);
 
   const getCurrentDateTime = () => {
     const currentDateTime = new Date();
@@ -54,14 +82,14 @@ useEffect(() => {
     if (newComment.trim() !== "") {
       const newCommentObj = {
         postId,
-        userId: userProfile.id,
+        userId: userProfile?.id,
         text: newComment,
         firstname: userProfile?.firstName,
-        lastname: userProfile?.lastName
+        lastname: userProfile?.lastName,
       };
 
       // Send the new comment to the backend
-      fetch("http://localhost:3000/api/comments", {
+      fetch(`${import.meta.env.VITE_APP_BASE_URL}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,12 +99,15 @@ useEffect(() => {
         .then((response) => response.json())
         .then((data) => {
           // Update local state with the new comment
-          const updatedComment = {
+          const updatedComment: IComment = {
             ...newCommentObj,
             id: data.id,
             created_at: getCurrentDateTime(),
           };
-          setComments((prevComments) => [...prevComments, updatedComment]);
+          setComments((prevComments: IComment[]) => [
+            ...prevComments,
+            updatedComment,
+          ]);
           setNewComment("");
         })
         .catch((error) => {
@@ -88,23 +119,29 @@ useEffect(() => {
   return (
     <Card>
       <CardContent>
-      <Typography variant="body1" gutterBottom style={{ marginBottom: "10px" }}>
+        <Typography
+          variant="body1"
+          gutterBottom
+          style={{ marginBottom: "10px" }}
+        >
           Comments
         </Typography>
-        {comments.map((comment) => (
+        {comments?.map((comment: IComment) => (
           <div
             key={comment.id}
             style={{ display: "flex", alignItems: "center", marginBottom: 10 }}
           >
             <Avatar sx={{ bgcolor: "red" }} aria-label="comment-avatar">
-              {comment?.firstname.split('')[0]}
+              {comment.firstname ? comment.firstname.split("")[0] : ""}
             </Avatar>
             <div style={{ marginLeft: 10 }}>
               <Typography variant="body1" style={{ marginBottom: 5 }}>
-                <strong>{comment.firstname} {comment.lastname}</strong>
+                <strong>
+                  {comment.firstname} {comment.lastname}
+                </strong>
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {comment.created_at}
+                {comment.created_at.toString()}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {comment.text}
@@ -112,6 +149,7 @@ useEffect(() => {
             </div>
           </div>
         ))}
+
         <TextField
           fullWidth
           variant="outlined"
