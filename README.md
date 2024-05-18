@@ -1,4 +1,4 @@
-# Project Title
+# Nobel Prize Application - Frontend
 
 Welcome to the Nobel Prize Frontend project! This project is a React application built with Vite and TypeScript, designed to showcase Nobel Prize-related content. It uses MUI for styling, and features user authentication and access management with Keycloak, including Google reCAPTCHA for security. The application also supports light and dark themes using a custom ThemeContext.
 
@@ -38,26 +38,16 @@ npm install
 
 3. Rename the .env.example file to .env and configure your environment variables:
 
+4. Please make suren follow the instructions and setup the backend server https://github.com/heshancs/Nobel-Prize-Backend
 
 
-```bash
-mv .env.example .env
-```
-
-4. Rename the .env.example file to .env and configure your environment variables:
-
-
-
+5. Run the application
 ```bash
 npm run dev
 ```
-    
-    
-## Screenshots
 
-![App Screenshot - Light](https://asset.cloudinary.com/dyldogaxt/74c7a11d2485508037871152db19b380)
-
-![App Screenshot - Dark](https://asset.cloudinary.com/dyldogaxt/eb83b5caedce549da523268c872b3b30)
+6. Register as a new user and enjoy the application.
+    
 
 ## Environment Variables
 
